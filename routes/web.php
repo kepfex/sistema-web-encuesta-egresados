@@ -6,7 +6,7 @@ use App\Livewire\Admin\Program\Index as ProgramIndex;
 use App\Livewire\Admin\Program\Create as ProgramCreate;
 use App\Livewire\Admin\Program\Edit as ProgramEdit;
 use App\Livewire\Admin\Graduate\Index as GraduateIndex;
-use App\Livewire\Admin\Graduate\show as GraduateShow;
+use App\Livewire\Admin\Graduate\Show as GraduateShow;
 use App\Livewire\Admin\Graduate\Create as GraduateCreate;
 use App\Livewire\Admin\Graduate\Edit as GraduateEdit;
 use App\Livewire\Admin\TemporaryLink\Index as TemporaryLinkIndex;

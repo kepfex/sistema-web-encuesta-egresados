@@ -41,7 +41,7 @@ class Recaptcha implements ValidationRule
         $result = $response->json();
 
         // 👇 Log para debug
-        Log::info('reCAPTCHA verification', $result);
+        // Log::info('reCAPTCHA verification', $result);
 
         if (!($result['success'] ?? false)) {
             $fail('Validación reCAPTCHA fallida.');
