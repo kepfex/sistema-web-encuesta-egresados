@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="light">
 
 <head>
     @include('partials.head')
@@ -28,13 +28,19 @@
                     :current="request()->routeIs('admin.graduates.*')" wire:navigate>{{ __('Egresados/Encuesta') }}
                 </flux:navlist.item>
                 <flux:navlist.item icon="link" :href="route('admin.temporary-links.index')"
-                    :current="request()->routeIs('admin.temporary-links.*')" wire:navigate>{{ __('Enlaces Temporales') }}
+                    :current="request()->routeIs('admin.temporary-links.*')" wire:navigate>
+                    {{ __('Enlaces Temporales') }}
                 </flux:navlist.item>
             </flux:navlist.group>
         </flux:navlist>
 
         <flux:spacer />
 
+        <flux:navlist.item icon="calendar" :href="route('admin.current-years.index')"
+            :current="request()->routeIs('admin.current-years.*')" wire:navigate>{{ __('Denominación Año Actual') }}
+        </flux:navlist.item>
+        <flux:menu.separator />
+        
         <flux:navlist variant="outline">
             {{-- <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit"
                 target="_blank">
@@ -78,17 +84,18 @@
                         {{ __('Settings') }}
                     </flux:menu.item>
                 </flux:menu.radio.group>
-
-                <flux:menu.separator />
-
-                <form method="POST" action="{{ route('logout') }}" class="w-full">
-                    @csrf
-                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                        {{ __('Log Out') }}
-                    </flux:menu.item>
-                </form>
             </flux:menu>
         </flux:dropdown>
+        <flux:navlist variant="outline">
+            {{-- <flux:menu.separator /> --}}
+            <form method="POST" action="{{ route('logout') }}" class="w-full">
+                @csrf
+                <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle"
+                    class="w-full cursor-pointer bg-red-50 hover:bg-red-500 hover:text-white">
+                    {{ __('Cerrar Sesión') }}
+                </flux:menu.item>
+            </form>
+        </flux:navlist>
     </flux:sidebar>
 
     <!-- Mobile User Menu -->
@@ -125,15 +132,6 @@
                     <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>
                         {{ __('Settings') }}</flux:menu.item>
                 </flux:menu.radio.group>
-
-                <flux:menu.separator />
-
-                <form method="POST" action="{{ route('logout') }}" class="w-full">
-                    @csrf
-                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                        {{ __('Log Out') }}
-                    </flux:menu.item>
-                </form>
             </flux:menu>
         </flux:dropdown>
     </flux:header>

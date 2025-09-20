@@ -34,7 +34,7 @@
                             </a>
                         @else
                             <a href="{{ route('login') }}"
-                                class="flex gap-2 rounded-md px-4 py-2 text-sm font-semibold leading-6 text-slate-900 dark:text-white hover:text-slate-700 dark:hover:text-slate-300">
+                                class="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-semibold leading-6 text-slate-900 dark:text-white hover:text-slate-700 dark:hover:text-slate-300">
                                 Iniciar Sesión
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -75,7 +75,7 @@
                             class="rounded-md bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                             Acceder al Sistema
                         </a>
-                        <a href="#programas" class="flex gap-2 text-sm font-semibold leading-6 text-slate-900 dark:text-white">
+                        <a href="#programas" class="flex items-center gap-2 text-sm font-semibold leading-6 text-slate-900 dark:text-white">
                             Nuestros Programas
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

@@ -1131,21 +1131,6 @@
                                 </svg>
                             </button>
                         @endif
-                        {{-- @if ($currentStep === $totalSteps)
-                            <button type="button" wire:click="submit" wire:loading.attr="disabled"
-                                class="inline-flex items-center px-5 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50">
-                                <span>Finalizar y Enviar</span>
-                                <svg wire:loading wire:target="submit"
-                                    class="animate-spin ml-2 -mr-1 h-5 w-5 text-white"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10"
-                                        stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                    </path>
-                                </svg>
-                            </button>
-                        @endif --}}
                     </div>
                 </form>
             </main>
@@ -1161,15 +1146,27 @@
                         .then(function (token) {
                             // console.log("Token recibido:", token); // Debug
 
-                            // Asigna token al componente Livewire
-                            @this.set('recaptcha_token', token);
-
-                            // Llama al método submit de tu componente
-                            @this.call('submit');
+                            // Llamar al método submit de Livewire y pasar token como parámetro
+                            @this.call('submit', token);
                         });
                 });
             }
         </script>
-
+        
+        {{-- @if ($currentStep === $totalSteps)
+            <button type="button" wire:click="submit" wire:loading.attr="disabled"
+                class="inline-flex items-center px-5 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50">
+                <span>Finalizar y Enviar</span>
+                <svg wire:loading wire:target="submit"
+                    class="animate-spin ml-2 -mr-1 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                        stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                </svg>
+            </button>
+            @endif --}}
     @endpush
 </div>

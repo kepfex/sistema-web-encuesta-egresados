@@ -225,7 +225,7 @@ class SurveyForm extends Component
                 ],
 
                 'dependiente_condicion_cargo' => 'required_if:es_dependiente,true|in:nombrado,contratado,temporal',
-                
+
                 'condicion_formalidad' => 'required_if:es_dependiente,true|in:formal,informal',
             ],
             5 => [
@@ -350,15 +350,21 @@ class SurveyForm extends Component
         }
     }
 
-    // --- Lógica de Guardado Final ---
-    public function submit()
+    protected function validateRecaptcha()
     {
-        $this->validateStep(8); // Valida el último paso
-
-        $this->validate([ // Validamos reCaptcha
+        $this->validate([
             'recaptcha_token' => ['required', new Recaptcha('submit', 0.5)],
         ]);
-        
+    }
+
+    // --- Lógica de Guardado Final ---
+    public function submit($token)
+    {
+        $this->recaptcha_token = $token;
+
+        $this->validateStep(8); // Valida el último paso
+        $this->validateRecaptcha();
+
         // dd($this->recaptcha_token); // Para debuggear la respuesta de Google
 
         // Ejecuta la transacción para guardar en la base de datos
@@ -378,76 +384,82 @@ class SurveyForm extends Component
                 ]
             );
 
+            // 2. Verificar si ya respondió encuesta
+            $encuestaExistente = $egresado->survey()->first();
+            if ($encuestaExistente) {
+                // Evita duplicar incrementos en usos_actuales
+                return;
+            }
+
+            // 3. Transformar horarios si vienen como string
             // transformar el string en array antes de guardar.
             $horarios = $this->disponibilidad_horarios;
             if (is_string($horarios)) {
                 $horarios = array_map('trim', explode(',', $horarios));
             }
 
-            // 2. Crea la encuesta
-            $egresado->survey()->updateOrCreate(
-                [],
-                [
-                    'edad' => $this->edad ?: null,
-                    'sexo' => $this->sexo ?: null,
-                    'fecha_nacimiento' => $this->fecha_nacimiento ?: null,
-                    'nacimiento_distrito_id' => $this->nacimiento_distrito_id ?: null,
+            // 4. Crear la encuesta
+            $egresado->survey()->create([
+                'edad' => $this->edad ?: null,
+                'sexo' => $this->sexo ?: null,
+                'fecha_nacimiento' => $this->fecha_nacimiento ?: null,
+                'nacimiento_distrito_id' => $this->nacimiento_distrito_id ?: null,
 
-                    'desempeno_post_egreso' => $this->desempeno_post_egreso,
-                    'desempeno_post_titulacion' => $this->desempeno_post_titulacion,
-                    'tiempo_sin_trabajar_egreso' => $this->tiempo_sin_trabajar_egreso ?: null,
-                    'tiempo_sin_trabajar_titulacion' => $this->tiempo_sin_trabajar_titulacion ?: null,
+                'desempeno_post_egreso' => $this->desempeno_post_egreso,
+                'desempeno_post_titulacion' => $this->desempeno_post_titulacion,
+                'tiempo_sin_trabajar_egreso' => $this->tiempo_sin_trabajar_egreso ?: null,
+                'tiempo_sin_trabajar_titulacion' => $this->tiempo_sin_trabajar_titulacion ?: null,
 
-                    'desempeno_en_su_area' => $this->desempeno_en_su_area,
-                    'condicion_laboral' => $this->condicion_laboral ?: null,
-                    'remuneracion_mensual' => $this->remuneracion_mensual ?: null,
-                    'motivo_no_ejerce_carrera' => $this->motivo_no_ejerce_carrera ?: null,
+                'desempeno_en_su_area' => $this->desempeno_en_su_area,
+                'condicion_laboral' => $this->condicion_laboral ?: null,
+                'remuneracion_mensual' => $this->remuneracion_mensual ?: null,
+                'motivo_no_ejerce_carrera' => $this->motivo_no_ejerce_carrera ?: null,
 
-                    'es_independiente' => $this->es_independiente,
-                    'es_dependiente' => $this->es_dependiente,
-                    'no_aplica_empleo' => $this->no_aplica_empleo,
+                'es_independiente' => $this->es_independiente,
+                'es_dependiente' => $this->es_dependiente,
+                'no_aplica_empleo' => $this->no_aplica_empleo,
 
-                    'independiente_descripcion' => $this->independiente_descripcion ?: null,
-                    'dependiente_empresa_nombre' => $this->dependiente_empresa_nombre ?: null,
-                    'dependiente_empresa_direccion' => $this->dependiente_empresa_direccion ?: null,
-                    'dependiente_empresa_distrito_id' => $this->dependiente_empresa_distrito_id ?: null,
-                    'dependiente_empresa_provincia_id' => $this->dependiente_empresa_provincia_id ?: null,
-                    'dependiente_empresa_departamento_id' => $this->dependiente_empresa_departamento_id ?: null,
-                    'dependiente_empresa_tipo' => $this->dependiente_empresa_tipo ?: null,
-                    'dependiente_empresa_ruc' => $this->dependiente_empresa_ruc ?: null,
-                    'dependiente_empresa_rubro' => $this->dependiente_empresa_rubro ?: null,
-                    'dependiente_empresa_jefe' => $this->dependiente_empresa_jefe ?: null,
-                    'dependiente_cargo' => $this->dependiente_cargo ?: null,
-                    'dependiente_fecha_ingreso' => $this->dependiente_fecha_ingreso ?: null,
-                    'dependiente_condicion_cargo' => $this->dependiente_condicion_cargo ?: null,
-                    'condicion_formalidad' => $this->condicion_formalidad ?: null,
+                'independiente_descripcion' => $this->independiente_descripcion ?: null,
+                'dependiente_empresa_nombre' => $this->dependiente_empresa_nombre ?: null,
+                'dependiente_empresa_direccion' => $this->dependiente_empresa_direccion ?: null,
+                'dependiente_empresa_distrito_id' => $this->dependiente_empresa_distrito_id ?: null,
+                'dependiente_empresa_provincia_id' => $this->dependiente_empresa_provincia_id ?: null,
+                'dependiente_empresa_departamento_id' => $this->dependiente_empresa_departamento_id ?: null,
+                'dependiente_empresa_tipo' => $this->dependiente_empresa_tipo ?: null,
+                'dependiente_empresa_ruc' => $this->dependiente_empresa_ruc ?: null,
+                'dependiente_empresa_rubro' => $this->dependiente_empresa_rubro ?: null,
+                'dependiente_empresa_jefe' => $this->dependiente_empresa_jefe ?: null,
+                'dependiente_cargo' => $this->dependiente_cargo ?: null,
+                'dependiente_fecha_ingreso' => $this->dependiente_fecha_ingreso ?: null,
+                'dependiente_condicion_cargo' => $this->dependiente_condicion_cargo ?: null,
+                'condicion_formalidad' => $this->condicion_formalidad ?: null,
 
-                    'calificacion_formacion' => $this->calificacion_formacion ?: null,
-                    'utilidad_contenido' => $this->utilidad_contenido ?: null,
-                    'satisfaccion_formacion' => $this->satisfaccion_formacion ?: null,
+                'calificacion_formacion' => $this->calificacion_formacion ?: null,
+                'utilidad_contenido' => $this->utilidad_contenido ?: null,
+                'satisfaccion_formacion' => $this->satisfaccion_formacion ?: null,
 
-                    'medio_contacto_preferido' => $this->medio_contacto_preferido ?: null,
-                    'disponibilidad_dias' => $this->disponibilidad_dias ?: null,
-                    'disponibilidad_horarios' => !empty($horarios) ? $horarios : null,
+                'medio_contacto_preferido' => $this->medio_contacto_preferido ?: null,
+                'disponibilidad_dias' => $this->disponibilidad_dias ?: null,
+                'disponibilidad_horarios' => !empty($horarios) ? $horarios : null,
 
-                    'otra_actividad_descripcion' => $this->sin_otra_actividad ? null : ($this->otra_actividad_descripcion ?: null),
-                    'sin_otra_actividad' => $this->sin_otra_actividad,
+                'otra_actividad_descripcion' => $this->sin_otra_actividad ? null : ($this->otra_actividad_descripcion ?: null),
+                'sin_otra_actividad' => $this->sin_otra_actividad,
 
-                    'estudia_otra_carrera' => $this->estudia_otra_carrera,
-                    'otra_carrera_nombre' => $this->otra_carrera_nombre ?: null,
-                    'otra_carrera_institucion' => $this->otra_carrera_institucion ?: null,
-                    'otra_carrera_tipo_institucion' => $this->otra_carrera_tipo_institucion ?: null,
+                'estudia_otra_carrera' => $this->estudia_otra_carrera,
+                'otra_carrera_nombre' => $this->otra_carrera_nombre ?: null,
+                'otra_carrera_institucion' => $this->otra_carrera_institucion ?: null,
+                'otra_carrera_tipo_institucion' => $this->otra_carrera_tipo_institucion ?: null,
 
-                    'sugerencias' => $this->sugerencias ?: null,
-                    'fecha_completado' => now(),
+                'sugerencias' => $this->sugerencias ?: null,
+                'fecha_completado' => now(),
 
-                ]
-            );
+            ]);
 
-            // 3. Incrementa el contador de usos del enlace
+            // 5. Incrementa el contador de usos del enlace
             $this->link->increment('usos_actuales');
         });
 
+        // Flash + redirección
         // Añade un mensaje flash a la sesión antes de redirigir
         session()->flash('survey_completed', '¡Gracias por completar la encuesta!');
         return $this->redirect(route('encuesta.gracias'), navigate: true);

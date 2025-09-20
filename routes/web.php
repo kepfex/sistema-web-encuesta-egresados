@@ -12,6 +12,8 @@ use App\Livewire\Admin\Graduate\Edit as GraduateEdit;
 use App\Livewire\Admin\TemporaryLink\Index as TemporaryLinkIndex;
 use App\Livewire\Admin\TemporaryLink\Create as TemporaryLinkCreate;
 use App\Livewire\Admin\TemporaryLink\Edit as TemporaryLinkEdit;
+use App\Livewire\Admin\CurrentYear\Index as CurrentYearIndex;
+use App\Livewire\Admin\CurrentYear\Edit as CurrentYearEdit;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -53,6 +55,10 @@ Route::middleware(['auth'])
         Route::get('temporary-links/create', TemporaryLinkCreate::class)->name('temporary-links.create');
         Route::get('temporary-links/{temporaryLink}/edit', TemporaryLinkEdit::class)->name('temporary-links.edit');
 
+        // Rutas para Denominación del año 
+        Route::get('current-years', CurrentYearIndex::class)->name('current-years.index');
+        Route::get('current-years/{currentYear}/edit', CurrentYearEdit::class)->name('current-years.edit');
+
         // Rutas para Egresados
         Route::get('graduates', GraduateIndex::class)->name('graduates.index');
         Route::get('graduates/{graduate}', GraduateShow::class)->name('graduates.show'); // Ruta para ver el detalle
@@ -71,7 +77,7 @@ Route::get('/encuesta/completada/gracias', function () {
 
 
 // Rutas para pdf
-Route::get('/graduates/{graduate}/survey/pdf', [PDFController::class, 'graduateSurvey'])
+Route::middleware(['auth'])->get('/graduates/{graduate}/survey/pdf', [PDFController::class, 'graduateSurvey'])
     ->name('graduates.survey.pdf');
     
 require __DIR__ . '/auth.php';

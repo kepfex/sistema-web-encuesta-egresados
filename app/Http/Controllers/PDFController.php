@@ -30,7 +30,7 @@ class PDFController extends Controller
             compact('graduate', 'survey')
         );
 
-        return $pdf->stream("Encuesta-{$graduate->nombre_completo}.pdf"); // inline
-        // return $pdf->download("Encuesta-{$graduate->nombre_completo}.pdf"); // descarga directa
+        // return $pdf->stream("Encuesta-{$graduate->nombre_completo}-{$survey->codigoEncuesta}.pdf"); // inline
+        return $pdf->download("Encuesta-{$graduate->nombre_completo}-{$survey->codigoEncuesta}.pdf"); // descarga directa
     }
 }

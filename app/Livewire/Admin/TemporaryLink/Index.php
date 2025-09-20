@@ -19,7 +19,7 @@ class Index extends Component
     public function updatingSearch() { $this->resetPage(); }
     public function updatingPaginarX() { $this->resetPage(); }
 
-    #[On('delete-link')]
+    #[On('delete-temporary-link')]
     public function deleteTemporaryLink($id)
     {
         $link = TemporaryLink::find($id);

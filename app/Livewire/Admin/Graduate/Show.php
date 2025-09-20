@@ -33,7 +33,8 @@ class Show extends Component
     {
         // Pasamos el egresado ya cargado con todas sus relaciones a la vista
         return view('livewire.admin.graduate.show', [
-            'survey' => $this->graduate->survey // Pasamos la encuesta como una variable separada por comodidad
+            'survey' => $this->graduate->survey, // Pasamos la encuesta como una variable separada por comodidad
+            'title' => "Encuesta de Egresado",
         ]);
     }
 }

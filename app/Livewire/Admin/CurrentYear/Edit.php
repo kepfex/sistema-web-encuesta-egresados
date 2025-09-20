@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Livewire\Admin\TemporaryLink;
+namespace App\Livewire\Admin\CurrentYear;
 
-use App\Livewire\Forms\Admin\TemporaryLinkForm;
-use App\Models\TemporaryLink;
+use App\Livewire\Forms\Admin\CurrentYearForm;
+use App\Models\CurrentYear;
 use Livewire\Component;
 
 class Edit extends Component
 {
-    public TemporaryLinkForm $form;
-    public TemporaryLink $temporaryLink;
+    public CurrentYearForm $form;
+    public CurrentYear $currentYear;
 
-    public function mount(TemporaryLink $temporaryLink)
+    public function mount(CurrentYear $currentYear)
     {
-        $this->$temporaryLink = $temporaryLink;
-        $this->form->setTemporaryLink($temporaryLink);
+        $this->$currentYear = $currentYear;
+        $this->form->setCurrentYear($currentYear);
     }
 
     public function save()
@@ -25,21 +25,21 @@ class Edit extends Component
         $notification = [
             'variant' => 'success',
             'title'   => '¡Actualizado!',
-            'message' => 'El Enlace Temporal se actuzalizó correctamente.'
+            'message' => 'La Denominaión del Año Actual se actuzalizó correctamente.'
         ];
 
         // Envía la notificación a la sesión flash
         session()->flash('notify', $notification);
 
         // Redirige a la página del listado usando la navegación de Livewire
-        $this->redirect(route('admin.temporary-links.index'), navigate: true);
+        $this->redirect(route('admin.current-years.index'), navigate: true);
     }
 
     public function render()
     {
-        return view('livewire.admin.temporary-link.form', [
+        return view('livewire.admin.current-year.form', [
             'breadcrumbsText' => 'Editar',
-            'title' => 'Editar Enlace Temporal',
+            'title' => 'Editar Denominación Año Actual Perú',
             'buttonText' => 'Guardar Cambios',
         ]);
     }
